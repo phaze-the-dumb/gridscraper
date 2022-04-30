@@ -1,5 +1,6 @@
 const HTMLParser = require('node-html-parser');
 const puppeteer = require('puppeteer');
+const fetch = require('node-fetch');
 require('dotenv').config();
 
 console.log('Helo!')
