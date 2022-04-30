@@ -34,7 +34,7 @@ let detectInfo = ( text ) => {
         percent: text[3]
     }
 
-    if(text[0] === 'IC' || text[0] === 'IC2' || text[0] === 'Pumped'){
+    if(text[0] === 'IC' || text[0] === 'IC2' || text[0] === 'Pumped' || text[0] === 'Carbon'){
         key += ' ' + text[1];
         value.gw = text[2];
         value.percent = text[4];
@@ -59,6 +59,10 @@ let scrape = async () => {
 
         console.log('Fixing Text');
         root.querySelectorAll('.rgraph_accessible_text_bars').forEach(data => {
+            detectInfo(data.innerHTML);
+        });
+
+        root.querySelectorAll('.rgraph_accessible_text').forEach(data => {
             detectInfo(data.innerHTML);
         });
 
