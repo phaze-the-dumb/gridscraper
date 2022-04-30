@@ -2,6 +2,8 @@ const HTMLParser = require('node-html-parser');
 const puppeteer = require('puppeteer');
 require('dotenv').config();
 
+console.log('Helo!')
+
 let cachedInfo = {};
 
 let detectInfo = ( text ) => {
@@ -41,23 +43,38 @@ let detectInfo = ( text ) => {
 }
 
 let scrape = async () => {
+    console.log('Launching Browser');
+
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
+
+    console.log('Loading GridWatch');
     await page.goto('https://gridwatch.co.uk/');
 
     setTimeout(async () => {
+        console.log('Parsing Data')
         const root = HTMLParser.parse(await page.content());
 
+        console.log('Fixing Text');
         root.querySelectorAll('.rgraph_accessible_text_bars').forEach(data => {
             detectInfo(data.innerHTML);
         });
 
+        console.log('Closing Browser');
         await browser.close();
 
+        console.log('Sending To Server');
         fetch('https://grid.phazed.xyz/api/v1/webhook', {
             method: 'POST',
             headers: {
                 token: process.env.WHToken
+            },
+            body: JSON.stringify(cachedInfo)
+        }).then(data => data.json()).then(data => {
+            if(data.ok){
+                console.log('Finished Sending Data')
+            } else{
+                console.log('Error: '+data.msg)
             }
         })
     }, 2000)
