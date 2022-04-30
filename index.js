@@ -34,12 +34,13 @@ let detectInfo = ( text ) => {
         percent: text[3]
     }
 
-    if(text[0] === 'IC' || text[0] === 'IC2'){
+    if(text[0] === 'IC' || text[0] === 'IC2' || text[0] === 'Pumped'){
         key += ' ' + text[1];
         value.gw = text[2];
         value.percent = text[4];
     }
 
+    if(key === '')return;
     cachedInfo[key] = value;
 }
 
